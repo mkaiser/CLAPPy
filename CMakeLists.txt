@@ -31,22 +31,17 @@ endif()
 # Try to find CLAP quietly first
 find_package(CLAP QUIET)
 if(NOT CLAP_FOUND)
-    message (STATUS "CMAKE ############## Finding clap: ### second try!")
+    message (STATUS "Could not find locally installed CLAP. Fetching CLAP via FetchContent...")
     include(FetchContent)
     FetchContent_Declare(
         CLAP
           GIT_REPOSITORY https://github.com/fporrmann/CLAP.git
-        # GIT_REPOSITORY https://github.com/mkaiser/CLAP.git
-        # GIT_REPOSITORY /data_fast/storage/mkaiser/hadefla/git_hadefla/zybo_z7/CLAP/
     )
     FetchContent_MakeAvailable(CLAP)
 
     find_package(CLAP REQUIRED)
 endif()
 
-# message (DEBUG "CLAP_INCLUDE_DIR=${CLAP_INCLUDE_DIR}")
-
-# include_directories(${CLAP_INCLUDE_DIR})
 
 add_definitions(-DMODULE_NAME=${PROJECT_NAME})
 
@@ -59,7 +54,6 @@ pybind11_add_module(${PROJECT_NAME}
     src/CLAPPy.cpp
 )
 
-# target_link_libraries(${PROJECT_NAME} PRIVATE ${CLAP_LIBS})
 target_link_libraries(${PROJECT_NAME} PRIVATE CLAP::CLAP)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION CLAPPy)
